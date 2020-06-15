@@ -5,6 +5,7 @@ class Paddle:
         self.w = w
         self.h = h
         self.col = col
+        self.score = 0
 
     def draw(self, rect):
         rect(self.x, self.y, self.w, self.h, self.col)
@@ -29,3 +30,6 @@ class AI(Paddle):
 
     def control(self, ballVel):
         self.y += ballVel
+
+    def reset(self, height):
+        self.y = height / 2 - self.h / 2

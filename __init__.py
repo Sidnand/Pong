@@ -7,7 +7,7 @@ from ball import *
 WIDTH = 250
 HEIGHT = 200
 TITLE = 'PONG'
-COL = 7
+COL = 7 # color white
 
 PADDLE_MARGIN_FROM_LEFT = 10
 PADDLE_WIDTH = 5
@@ -29,7 +29,7 @@ class App:
 
         ball.animate()
         player.control(pyxel.btnp, pyxel.KEY_UP, pyxel.KEY_DOWN)
-        # ai.control(ball.velY)
+        ai.control(ball.velY)
         self.checkCollision()
 
     def draw(self):
@@ -37,6 +37,8 @@ class App:
         player.draw(pyxel.rect)
         ai.draw(pyxel.rect)
         ball.draw(pyxel.circ)
+        pyxel.text(30, 30, str(player.score), COL)
+        pyxel.text(WIDTH - 30, 30, str(ai.score), COL)
 
     def checkCollision(self):
         # paddle collision
@@ -45,11 +47,11 @@ class App:
             (ball.y + ball.r) <= (player.y + player.h) ):
             if ( ball.y < (player.y + player.h / 2) ):
                 ball.velX *= -1
-                ball.velY = -1
+                ball.velY = 1
 
             elif ( ball.y >= (player.y + player.h / 2) ):
                 ball.velX *= -1
-                ball.velY = 1
+                ball.velY = -1
 
 
         if ( (ball.x + ball.r) >= ai.x and
@@ -63,11 +65,20 @@ class App:
                 ball.velX *= -1
                 ball.velY = 1
 
-        # wall collision
+        # player wall collision
         if (ball.y <= 0 or
-            (ball.y + ball.r) >= HEIGHT): ball.velY *= -1
+            (ball.y + ball.r) >= HEIGHT):
+            ball.velY *= -1
 
-        if (ball.x < 0): ball.reset( (WIDTH, HEIGHT) )
-        if (ball.x > WIDTH): ball.reset( (WIDTH, HEIGHT) )
+        if (ball.x < 0): 
+            ball.reset( (WIDTH, HEIGHT) )
+            ai.score += 1
+            ai.reset(HEIGHT)
+            print(player.score)
+        if (ball.x > WIDTH):
+            ball.reset( (WIDTH, HEIGHT) )
+            player.score += 1
+            ai.reset(HEIGHT)
+            print(ai.score)
 
 App()
